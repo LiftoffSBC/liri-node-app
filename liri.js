@@ -56,7 +56,7 @@ function showSong(songName) {
 }
 function showMovie(movieName) {
   if (!movieName) {
-    movieName = '8 mile';
+    movieName = 'Mr. Nobody';
   }
   // Use request package moviedb api  (check instructions for names) and
   // credentials to request and display a movie based on a provided movie name.
