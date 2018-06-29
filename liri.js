@@ -25,35 +25,31 @@ function runCommand(command, searchTerm) {
 
 function showTweets() {
   // Use twitter package and api credentials to get and display user's tweets.
-  var client = new Twitter(keys.twitter)
-
+  var client = new Twitter(keys.twitter);
   var params = { screen_name: 'ybbils' };
-  client.get('statuses/user_timeline', params, function (error, tweets, response) {
+  client.get('statuses/user_timeline/count=20', params, function (error, tweets, response) {
     if (!error) {
-      console.log(tweets);
+      console.log(tweets[0].text);
+      console.log(tweets.created_at);
     }
   });
 };
 
 function showSong(songName) {
   if (!songName) {
-    songName = 'Lose Yourself';
+    songName = 'The Sign';
   }
   // Use spotify-api (check instructions for package name) package and
   // credentials to request and display a song based on a provided song name.
   var Spotify = require('node-spotify-api');
 
-  var spotify = new Spotify({
-    id: SPOTIFY_ID,
-    secret: SPOTIFY_SECRET,
-  });
+  var spotify = new Spotify(keys.spotify)
 
   spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
-
-    console.log(data);
+    console.log(data.album.artists[0].name);
   })
 
   console.log(songName);
