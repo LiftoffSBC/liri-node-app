@@ -29,15 +29,18 @@ function showTweets() {
   var params = { screen_name: 'ybbils' };
   client.get('statuses/user_timeline/count=20', params, function (error, tweets, response) {
     if (!error) {
-      console.log(tweets[0].text);
-      console.log(tweets.created_at);
+      for (var i = 0; i < tweets.length; i++) {
+        console.log(tweets[i].text);
+        console.log(tweets[i].created_at);
+        console.log("-----------------------");
+      }
     }
   });
 };
 
 function showSong(songName) {
   if (!songName) {
-    songName = 'The Sign';
+    songName = 'Ace of Base The Sign';
   }
   // Use spotify-api (check instructions for package name) package and
   // credentials to request and display a song based on a provided song name.
@@ -45,14 +48,20 @@ function showSong(songName) {
 
   var spotify = new Spotify(keys.spotify)
 
-  spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
+  spotify.search({ type: 'track', query: songName }, function (err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
-    console.log(data.album.artists[0].name);
-  })
 
-  console.log(songName);
+    var track = data.tracks.items[0];
+
+    console.log("Artist Name: " + track.artists[0].name);
+    console.log("Album Name: " + track.album.name);
+    console.log("Preview Link: " + track.preview_url);
+    console.log("Song Name: " + track.name);
+  })
+  console.log("-----------------------");
+  // console.log(songName);
 }
 function showMovie(movieName) {
   if (!movieName) {
@@ -60,12 +69,38 @@ function showMovie(movieName) {
   }
   // Use request package moviedb api  (check instructions for names) and
   // credentials to request and display a movie based on a provided movie name.
-  request('http://www.omdbapi.com/?i=tt3896198&apikey=d40948ff', function (error, response, body) {
+  request('http://www.omdbapi.com/?t=' + movieName + '&apikey=d40948ff', function (error, response, body) {
     console.log('error:', error); // Print the error if one occurred
     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', body); // Print the HTML for the Google homepage.
+    // console.log('body:', body); // Print the HTML for the Google homepage.
+    var movieData = JSON.parse(body);
+    var movie = {
+      title: movieData.Title,
+      year: movieData.Year,
+      country: movieData.Country,
+      language: movieData.Language,
+      plot: movieData.Plot,
+      actors: movieData.Actors,
+      imdb: {
+        source: movieData.Ratings[0].Source,
+        rating: movieData.Ratings[0].Value
+      },
+      rottenTomatoes: {
+        source: movieData.Ratings[1].Source,
+        rating: movieData.Ratings[1].Value
+      }
+    }
+
+    console.log("Title: " + movie.title);
+    console.log("Release Year: " + movie.year);
+    console.log("IMDB Rating: " + movie.imdb.rating);
+    console.log("IMDB Rating: " + movie.rottenTomatoes.rating);
+    console.log("Country: " + movie.country);
+    console.log("Language: " + movie.language);
+    console.log("Plot: " + movie.plot);
+    console.log("Actors: " + movie.actors);
+
   });
-  console.log(movieName);
 }
 
 function doRandom() {
